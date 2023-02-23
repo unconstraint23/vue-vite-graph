@@ -4,7 +4,13 @@ const routes = [
         path: '/pixi',
       
          component: () => import("../views/Pixi.vue"),
-        //  children: []
+       
+    },
+    {
+        path: '/game',
+      
+         component: () => import("../views/Game.vue"),
+        
     },
     { path: '/', redirect: '/pixi' }
 
