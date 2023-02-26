@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/three": "^0.149.0",
     "normalize.css": "^8.0.1",
     "pixi-filters": "^5.1.1",
     "pixi.js": "^7.1.2",
+    "three": "^0.150.0",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

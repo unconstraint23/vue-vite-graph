@@ -12,6 +12,12 @@ const routes = [
          component: () => import("../views/Game.vue"),
         
     },
+    {
+        path: '/three1',
+      
+         component: () => import("../views/Three1.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
