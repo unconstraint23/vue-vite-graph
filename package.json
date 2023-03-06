@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@types/three": "^0.149.0",
+    "dat.gui": "^0.7.9",
+    "gsap": "^3.11.4",
     "normalize.css": "^8.0.1",
     "pixi-filters": "^5.1.1",
     "pixi.js": "^7.1.2",
