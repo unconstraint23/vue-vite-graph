@@ -18,6 +18,18 @@ const routes = [
          component: () => import("../views/Three1.vue"),
         
     },
+    {
+        path: '/meshStand',
+      
+         component: () => import("../views/MeshStand.vue"),
+        
+    },
+    {
+        path: '/sphere',
+      
+         component: () => import("../views/Sphere.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]

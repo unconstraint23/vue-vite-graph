@@ -9,6 +9,9 @@ import { onMounted } from 'vue';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
 import gsap from "gsap";
 import * as dat from 'dat.gui';
+import car from '../assets/car.jpg'
+import gree from '../assets/gree.jpg'
+import { Side } from 'three';
 onMounted(() => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -16,21 +19,48 @@ onMounted(() => {
     scene.add(camera)
     // 添加物体
     // 创建几何体
+    const textureLoader = new THREE.TextureLoader()
+    const carTexture = textureLoader.load(car)
+    const greeTexture = textureLoader.load(gree)
     const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
     const cubeMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffff00
+    color: 0xffff00,
+    map: carTexture,
+    aoMap: greeTexture,
+    // transparent: true,
+    // opacity: 0.4
     })
+
     // 根据几何体和材质创建物体
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
     scene.add(cube)
+    const cube2 = new THREE.MeshStandardMaterial({
+      map: carTexture,
+    aoMap: greeTexture,
+    displacementScale: 0.05,
+      roughness: 0 ,
+      side: THREE.DoubleSide 
+    })
+    
+    const directionLight = new THREE.DirectionalLight(0xbfa,0.5)
+    directionLight.position.set(10,10,10)
+    scene.add(directionLight)
     // 初始化渲染器
     const renderer = new THREE.WebGLRenderer();
+  
     // 设置渲染尺寸的大小
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
     const controls = new OrbitControls(camera, renderer.domElement)
     const axesHelper = new THREE.AxesHelper( 5 );
-scene.add( axesHelper );
+  
+scene.add(axesHelper);
+const planeGeometry = new THREE.PlaneGeometry(1,1)
+const plane = new THREE.Mesh(planeGeometry, cubeMaterial)
+plane.position.set(3, 0, 0)
+scene.add(plane)
+console.log(planeGeometry)
+planeGeometry.setAttribute("uv2", new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2))
 // let animate = gsap.to(cube.position, {
 //     x: 5,
 //     duration: 5,
