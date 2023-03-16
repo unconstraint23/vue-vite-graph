@@ -30,6 +30,12 @@ const routes = [
          component: () => import("../views/Sphere.vue"),
         
     },
+    {
+        path: '/sphereShadow',
+      
+         component: () => import("../views/SphereShadow.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
