@@ -36,6 +36,18 @@ const routes = [
          component: () => import("../views/SphereShadow.vue"),
         
     },
+    {
+        path: '/point',
+      
+         component: () => import("../views/PointLight.vue"),
+        
+    },
+    {
+        path: '/living',
+      
+         component: () => import("../views/Living3D.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
