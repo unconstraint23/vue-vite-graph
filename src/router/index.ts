@@ -48,6 +48,12 @@ const routes = [
          component: () => import("../views/Living3D.vue"),
         
     },
+    {
+        path: '/island',
+      
+         component: () => import("../views/Islands.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]

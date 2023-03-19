@@ -7,7 +7,7 @@
 import * as THREE from 'three'
 import { onMounted, ref } from 'vue';
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-import * as dat from 'dat.gui';
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 const containerRef = ref<any>(null)
 const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -31,31 +31,41 @@ onMounted(() => {
     // blockTexture.offset.x = 0.5
     // blockTexture.offset.y = 0.5
    
-    const spherGeometry = new THREE.SphereGeometry(1, 20, 20)
-    // 标准材质
-    const cubeMeterial = new THREE.MeshStandardMaterial()
+    // const geometry = new THREE.BoxGeometry(10, 10, 10)
+   
+   
 
-    // 根据几何体和材质创建物体
-    const sphere = new THREE.Mesh(spherGeometry, cubeMeterial)
-    sphere.castShadow = true
-    scene.add(sphere)
+   
 
- 
-    
-    const planeGeometry = new THREE.PlaneGeometry(10, 10);
-
-    const plane = new THREE.Mesh(planeGeometry, cubeMeterial);
-    plane.position.set(0, -1, 0);
-    plane.rotation.x = -Math.PI / 2
-    plane.receiveShadow = true
-    scene.add(plane);
+    // let arr = ["4_l.jpg","4_r.jpg","4_u.jpg","4_d.jpg","4_b.jpg","4_f.jpg"]
+    // let boxMaterial: any[] = []
+    // arr.forEach(item => {
+    //     let textrue = new THREE.TextureLoader().load(`./src/assets/living/${item}`)
+    //     if(item === "4_u.jpg" || item === "4_d.jpg") {
+    //         textrue.rotation = Math.PI
+    //         textrue.center = new THREE.Vector2(0.5, 0.5)
+    //     }
+    //     boxMaterial.push(new THREE.MeshBasicMaterial({map: textrue}))
+    // })
+    //  // 根据几何体和材质创建物体
+    //  const cube = new THREE.Mesh(geometry, boxMaterial)
+    //     cube.geometry.scale(1, 1, -1)
+    // scene.add(cube)
+   const sphere = new THREE.SphereGeometry(5, 32, 32)
+   const rbgeLoader = new RGBELoader()
+   rbgeLoader.load("./src/assets/hdr/Living.hdr",(textrue) => {
+        const material = new THREE.MeshBasicMaterial({map: textrue})
+        const sphereCube = new THREE.Mesh(sphere, material)
+        sphereCube.geometry.scale(1, 1, -1)
+        scene.add(sphereCube)
+   })
 
     renderer.shadowMap.enabled = true
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement)
     
     const controls = new OrbitControls(camera, renderer.domElement)
-    const axesHelper = new THREE.AxesHelper( 5 );
+    const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
     
     

@@ -22,7 +22,15 @@ onMounted(() => {
     scene.add(camera)
     const cubeTextrueLoader = new THREE.CubeTextureLoader()
     // 贴图必须宽高相等
-    const envMapTextrue = cubeTextrueLoader.setPath("./src/").load(["assets/space-textrue.jpeg","assets/space-textrue.jpeg","assets/space-textrue.jpeg","assets/space-textrue.jpeg","assets/space-textrue.jpeg","assets/space-textrue.jpeg"])
+    const envMapTextrue = cubeTextrueLoader.setPath("./src/assets/0").load([
+        "/px.jpg",
+        "/py.jpg",
+        "/pz.jpg",
+        "/nx.jpg",
+        "/ny.jpg",
+        "/nz.jpg",
+        
+    ])
     // blockTexture.offset.x = 0.5
     // blockTexture.offset.y = 0.5
    
@@ -37,13 +45,13 @@ onMounted(() => {
     // 根据几何体和材质创建物体
     const cube = new THREE.Mesh(spherGeometry, cubeMeterial)
     const rbgeLoader = new RGBELoader()
-    rbgeLoader.loadAsync("./src/assets/snow.hdr").then(textrue => {
-        textrue.mapping = THREE.EquirectangularReflectionMapping
-        scene.background = textrue
-    })
+    // rbgeLoader.loadAsync("./src/assets/snow.hdr").then(textrue => {
+    //     textrue.mapping = THREE.EquirectangularReflectionMapping
+    //     scene.background = textrue
+    // })
     scene.add(cube)
-    // scene.background = envMapTextrue
-    scene.environment = envMapTextrue
+    scene.background = envMapTextrue
+    // scene.environment = envMapTextrue
 //     const planeGeometry = new THREE.PlaneGeometry(1, 1, 200, 200);
 
 // const plane = new THREE.Mesh(planeGeometry, cubeMeterial);
