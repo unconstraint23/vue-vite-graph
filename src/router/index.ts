@@ -54,6 +54,12 @@ const routes = [
          component: () => import("../views/Islands.vue"),
         
     },
+    {
+        path: '/diamand',
+      
+         component: () => import("../views/Diamand.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]

@@ -23,7 +23,7 @@ camera.aspect = window.innerWidth / window.innerHeight;
 camera.updateProjectionMatrix();
     scene.add(camera)
 // 初始化渲染器 抗锯齿
-const renderer = new THREE.WebGLRenderer({antialias: true});
+const renderer = new THREE.WebGLRenderer({antialias: true,logarithmicDepthBuffer: true});
 renderer.outputEncoding = THREE.sRGBEncoding
     
 const render = (time?: any) => {
@@ -85,15 +85,20 @@ hdrLoader.loadAsync("./src/assets/hdr/050.hdr").then((texture) => {
     const controls = new OrbitControls(camera, renderer.domElement)
    // 添加小岛模型
 // 实例化gltf载入库
-const loader = new GLTFLoader().setPath("./src/draco/gltf/");
+const loader = new GLTFLoader();
 // 实例化draco载入库
 const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath("./src/draco/");
+dracoLoader.setDecoderPath("./src/assets/draco/gltf/");
 dracoLoader.preload();
 // 添加draco载入库
 loader.setDRACOLoader(dracoLoader);
 loader.load("./src/assets/models/island2.glb", (gltf) => {
+    console.log(gltf.scene)
   scene.add(gltf.scene);
+},xhr => {
+    console.log(xhr)
+},err => {
+    console.log(err)
 });
     
     render()
