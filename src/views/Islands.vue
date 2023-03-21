@@ -88,11 +88,11 @@ hdrLoader.loadAsync("./src/assets/hdr/050.hdr").then((texture) => {
 const loader = new GLTFLoader();
 // 实例化draco载入库
 const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath("./src/assets/draco/gltf/");
+dracoLoader.setDecoderPath("./src/public/draco/gltf/");
 dracoLoader.preload();
 // 添加draco载入库
 loader.setDRACOLoader(dracoLoader);
-loader.load("./src/assets/models/island2.glb", (gltf) => {
+loader.load("/src/assets/models/island2.glb", (gltf) => {
     console.log(gltf.scene)
   scene.add(gltf.scene);
 },xhr => {
