@@ -60,6 +60,12 @@ const routes = [
          component: () => import("../views/Diamand.vue"),
         
     },
+    {
+        path: '/bmw',
+      
+         component: () => import("../views/Bmw.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
