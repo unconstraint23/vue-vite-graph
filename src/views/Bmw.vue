@@ -1,7 +1,42 @@
 <template>
+  <div class="home">
     <div ref="containerRef" class="container">
        
+      </div>
+
+    <div class="home-content">
+      <div class="home-content-title">
+        <h1>汽车展示与选配</h1>
+      </div>
+      <h2>选择车身颜色</h2>
+      <div class="select">
+        <div
+          class="select-item"
+          v-for="(item, index) in colors"
+          :key="index"
+          @click="selectColor(index)"
+        >
+          <div
+            class="select-item-color"
+            :style="{ backgroundColor: item }"
+          ></div>
+        </div>
+      </div>
+
+      <h2>选择贴膜材质</h2>
+      <div class="select">
+        <div
+          class="select-item"
+          v-for="(item, index) in materials"
+          :key="index"
+          @click="selectMaterial(index)"
+        >
+          <div class="select-item-text">{{ item.name }}</div>
+        </div>
+      </div>
     </div>
+  </div>
+    
 </template>
 <script lang="ts" setup>
 import * as THREE from 'three'
@@ -15,8 +50,56 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 const containerRef = ref<any>(null)
-
-
+  let colors = ["red", "blue", "green", "gray", "orange", "purple"]
+  let materials = [
+  { name: "磨砂", value: 1 },
+  { name: "冰晶", value: 0 },
+];
+  const bodyMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xbfc,
+  metalness: 1,
+  roughness: 0.5,
+  clearcoat: 1,
+  clearcoatRoughness: 0,
+})
+const wheelsMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xbfe,
+  metalness: 1,
+  roughness: 0.1,
+});
+const frontMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xff0000,
+  metalness: 1,
+  roughness: 0.5,
+  clearcoat: 1,
+  clearcoatRoughness: 0,
+});
+const hoodMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xff0000,
+  metalness: 1,
+  roughness: 0.5,
+  clearcoat: 1,
+  clearcoatRoughness: 0,
+});
+const glassMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xffffff,
+  metalness: 0,
+  roughness: 0,
+  transmission: 1,
+  transparent: true,
+});
+  const selectColor = (index: number) => {
+  bodyMaterial.color.set(colors[index]);
+  frontMaterial.color.set(colors[index]);
+  hoodMaterial.color.set(colors[index]);
+  wheelsMaterial.color.set(colors[index]);
+  // glassMaterial.color.set(colors[index]);
+};
+const selectMaterial = (index: number) => {
+  bodyMaterial.clearcoatRoughness = materials[index].value;
+  frontMaterial.clearcoatRoughness = materials[index].value;
+  hoodMaterial.clearcoatRoughness = materials[index].value;
+};
 onMounted(() => {
     
     const scene = new THREE.Scene();
@@ -26,18 +109,33 @@ onMounted(() => {
 camera.aspect = window.innerWidth / window.innerHeight;
 // 更新摄像头投影矩阵
 camera.updateProjectionMatrix();
- 
 
-  
- 
   const gltfLoader = new GLTFLoader();
   const dracoLoader = new DRACOLoader();
   gltfLoader.setDRACOLoader(dracoLoader)
   dracoLoader.setDecoderPath("./src/public/draco/gltf/");
   gltfLoader.load("/src/assets/bmw/bmw01.glb", (gltf) => {
     const bmw = gltf.scene
-    bmw.traverse((child) => {
-      
+    bmw.traverse((child: any) => {
+        
+        if(child.isObject3D) {
+          if(child.name.includes("轮毂")) {
+            child.material = wheelsMaterial
+          }
+          // 车身
+          if(child.name.includes("Mesh002")) {
+            child.material = bodyMaterial
+          }
+          if(child.name.includes("前脸")) {
+            child.material = frontMaterial;
+          }
+          if(child.name.includes("引擎盖_1")) {
+            child.material = hoodMaterial
+          }
+          if(child.name.includes("挡风玻璃")) {
+            child.material = glassMaterial;
+          }
+        }
     })
     scene.add(bmw);
   })
@@ -104,5 +202,34 @@ const render = (time?: any) => {
 .container {
     width: 100%;
     height: 100vh;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.home-content {
+  position: fixed;
+  top: 0;
+  right: 20px;
+}
+
+.select-item-color {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  margin: 10px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.select-item {
+  text-decoration-line: underline;
+  color: #bfe;
+  cursor: pointer;
+  margin-right: 20px;
+}
+.select {
+  display: flex;
 }
 </style>
