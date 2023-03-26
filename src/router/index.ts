@@ -66,6 +66,24 @@ const routes = [
          component: () => import("../views/Bmw.vue"),
         
     },
+    {
+        path: '/christmas',
+      
+         component: () => import("../views/Christmas.vue"),
+        
+    },
+    {
+        path: '/robot',
+      
+         component: () => import("../views/Robot.vue"),
+        
+    },
+    {
+        path: '/earth',
+      
+         component: () => import("../views/Earth.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
