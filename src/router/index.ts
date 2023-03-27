@@ -84,6 +84,12 @@ const routes = [
          component: () => import("../views/Earth.vue"),
         
     },
+    {
+        path: '/football',
+      
+         component: () => import("../views/FootBall.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]

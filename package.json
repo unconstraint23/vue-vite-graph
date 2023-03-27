@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/three": "^0.149.0",
+    "cannon-es": "^0.20.0",
     "dat.gui": "^0.7.9",
     "gsap": "^3.11.4",
     "normalize.css": "^8.0.1",
