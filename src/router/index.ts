@@ -90,6 +90,18 @@ const routes = [
          component: () => import("../views/FootBall.vue"),
         
     },
+    {
+        path: '/missile',
+      
+         component: () => import("../views/Missile.vue"),
+        
+    },
+    {
+        path: '/pic',
+      
+         component: () => import("../views/Picture.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
