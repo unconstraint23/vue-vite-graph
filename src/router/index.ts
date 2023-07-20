@@ -97,6 +97,18 @@ const routes = [
         
     },
     {
+        path: '/cityModel',
+      
+         component: () => import("../views/CityModel.vue"),
+        
+    },
+    {
+        path: '/material',
+      
+         component: () => import("../views/Material.vue"),
+        
+    },
+    {
         path: '/pic',
       
          component: () => import("../views/Picture.vue"),
