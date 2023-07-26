@@ -1,0 +1,81 @@
+<template>
+    <div ref="containerRef">
+
+    </div>
+</template>
+
+<script setup>
+import * as THREE from "three";
+import { OrbitControls } from 'three/addons/controls/OrbitControls';
+import { onMounted, ref } from "vue";
+
+    const containerRef = ref()
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    camera.position.set(0, 0, 10);
+
+    const renderer = new THREE.WebGLRenderer({antialias: true,logarithmicDepthBuffer: true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding
+renderer.shadowMap.enabled = true;
+const controls = new OrbitControls(camera, renderer.domElement);
+   controls.enableDamping = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.autoRotate = false;
+  
+
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
+const material = new THREE.MeshStandardMaterial({
+});
+const sphere = new THREE.Mesh(sphereGeometry, material);
+// 投射阴影
+sphere.castShadow = true;
+sphere.receiveShadow = true
+scene.add(sphere);
+// 环境光
+const light = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
+scene.add(light);
+// // 创建平面
+const planeGeometry = new THREE.PlaneGeometry(10, 10);
+const plane = new THREE.Mesh(planeGeometry, material);
+plane.position.set(0, -1, 0);
+plane.rotation.x = -Math.PI / 2;
+// 接收阴影
+plane.receiveShadow = true;
+plane.castShadow = true;
+scene.add(plane)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(10, 10, 10);
+directionalLight.castShadow = true;
+// 设置阴影贴图模糊度
+directionalLight.shadow.radius = 20;
+// 设置阴影贴图的分辨率
+directionalLight.shadow.mapSize.set(4096, 4096);
+
+// 设置平行光投射相机的属性
+directionalLight.shadow.camera.near = 0.5;
+directionalLight.shadow.camera.far = 500;
+directionalLight.shadow.camera.top = 5;
+directionalLight.shadow.camera.bottom = -5;
+directionalLight.shadow.camera.left = -5;
+directionalLight.shadow.camera.right = 5;
+
+
+scene.add(directionalLight);
+// 添加坐标轴辅助器
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+  const render = () => {
+      renderer.render(scene, camera);
+    controls.update()
+  requestAnimationFrame(render);
+}
+  onMounted(() => {
+    containerRef.value.appendChild(renderer.domElement)
+        render()
+  })
+</script>
+
+<style scoped>
+
+</style>

@@ -43,6 +43,18 @@ const routes = [
         
     },
     {
+        path: '/pointapp',
+      
+         component: () => import("../views/Points.vue"),
+        
+    },
+    {
+        path: '/spherePoints',
+      
+         component: () => import("../views/SpherePoints.vue"),
+        
+    },
+    {
         path: '/living',
       
          component: () => import("../views/Living3D.vue"),
@@ -106,6 +118,18 @@ const routes = [
         path: '/material',
       
          component: () => import("../views/Material.vue"),
+        
+    },
+    {
+        path: '/env',
+      
+         component: () => import("../views/EnvTextrue.vue"),
+        
+    },
+    {
+        path: '/light',
+      
+         component: () => import("../views/Light.vue"),
         
     },
     {
