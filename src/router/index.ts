@@ -49,6 +49,12 @@ const routes = [
         
     },
     {
+        path: '/skyPoints',
+      
+         component: () => import("../views/SkyPoints.vue"),
+        
+    },
+    {
         path: '/spherePoints',
       
          component: () => import("../views/SpherePoints.vue"),

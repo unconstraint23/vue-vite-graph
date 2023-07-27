@@ -24,39 +24,55 @@ const controls = new OrbitControls(camera, renderer.domElement);
   controls.autoRotate = false;
   
   const textureLoader = new THREE.TextureLoader();
-// const particlesTexture = textureLoader.load("/src/assets/particles/1.png");
+
 
 // 环境光
 const light = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
 scene.add(light);
 
 
+const particlesGeometry = new THREE.BufferGeometry();
+const count = 5000;
+
+// 设置缓冲区数组
+const positions = new Float32Array(count * 3);
+// 设置粒子顶点颜色
+const colors = new Float32Array(count * 3);
+// 设置顶点
+for (let i = 0; i < count * 3; i++) {
+  positions[i] = (Math.random() - 0.5) * 100;
+  colors[i] = Math.random();
+}
+particlesGeometry.setAttribute(
+  "position",
+  new THREE.BufferAttribute(positions, 3)
+);
+particlesGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
 
 
 
 
 
-// 创建球几何体
-const sphereGeometry = new THREE.SphereGeometry(6, 30, 30);
 
-const texture = textureLoader.load("/src/assets/particles/2.png");
+const texture = textureLoader.load("/src/assets/particles/1.png");
 
 // 设置点材质
 const pointsMaterial = new THREE.PointsMaterial({
 
     sizeAttenuation: true,
     depthWrite: false,
+   vertexColors: true,
 
     map: texture,
     alphaMap: texture,
 });
-pointsMaterial.size = 0.1;
+pointsMaterial.size = 0.5;
 pointsMaterial.color.set(0xfff000);
 // // 相机深度而衰减
 pointsMaterial.sizeAttenuation = true;
 
-const points = new THREE.Points(sphereGeometry, pointsMaterial);
+const points = new THREE.Points(particlesGeometry, pointsMaterial);
 
 scene.add(points);
 
