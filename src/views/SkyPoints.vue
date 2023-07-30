@@ -12,7 +12,7 @@ import { onMounted, ref } from "vue";
     const containerRef = ref()
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.set(0, 0, 10);
+    camera.position.set(0, 0, 40);
 
     const renderer = new THREE.WebGLRenderer({antialias: true,logarithmicDepthBuffer: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -30,9 +30,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const light = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
 scene.add(light);
 
-
-const particlesGeometry = new THREE.BufferGeometry();
-const count = 5000;
+const createPoints = (url, size = 0.5) => {
+  const particlesGeometry = new THREE.BufferGeometry();
+const count = 1000;
 
 // 设置缓冲区数组
 const positions = new Float32Array(count * 3);
@@ -50,12 +50,7 @@ particlesGeometry.setAttribute(
 particlesGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
 
-
-
-
-
-
-const texture = textureLoader.load("/src/assets/particles/1.png");
+const texture = textureLoader.load(`/src/assets/particles/${url}.png`);
 
 // 设置点材质
 const pointsMaterial = new THREE.PointsMaterial({
@@ -63,11 +58,11 @@ const pointsMaterial = new THREE.PointsMaterial({
     sizeAttenuation: true,
     depthWrite: false,
    vertexColors: true,
-
+   blending: THREE.AdditiveBlending,
     map: texture,
     alphaMap: texture,
 });
-pointsMaterial.size = 0.5;
+pointsMaterial.size = size;
 pointsMaterial.color.set(0xfff000);
 // // 相机深度而衰减
 pointsMaterial.sizeAttenuation = true;
@@ -75,7 +70,12 @@ pointsMaterial.sizeAttenuation = true;
 const points = new THREE.Points(particlesGeometry, pointsMaterial);
 
 scene.add(points);
+    return points
+}
 
+const points = createPoints("1", 1.5);
+const points2 = createPoints("xh", 1);
+const points3 = createPoints("xh", 2);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
 directionalLight.position.set(10, 10, 10);
 directionalLight.castShadow = true;
@@ -97,7 +97,15 @@ scene.add(directionalLight);
 // 添加坐标轴辅助器
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
+// 设置时钟
+const clock = new THREE.Clock();
   const render = () => {
+    let time = clock.getElapsedTime();
+  points.rotation.x = time * 0.3;
+  points2.rotation.x = time * 0.5;
+  points2.rotation.y = time * 0.4;
+  points3.rotation.x = time * 0.2;
+  points3.rotation.y = time * 0.2;
       renderer.render(scene, camera);
     controls.update()
   requestAnimationFrame(render);

@@ -55,6 +55,12 @@ const routes = [
         
     },
     {
+        path: '/raycaster',
+      
+         component: () => import("../views/Raycaster.vue"),
+        
+    },
+    {
         path: '/spherePoints',
       
          component: () => import("../views/SpherePoints.vue"),
