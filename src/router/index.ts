@@ -61,6 +61,12 @@ const routes = [
         
     },
     {
+        path: '/physic',
+      
+         component: () => import("../views/CannonPhysic.vue"),
+        
+    },
+    {
         path: '/spherePoints',
       
          component: () => import("../views/SpherePoints.vue"),
