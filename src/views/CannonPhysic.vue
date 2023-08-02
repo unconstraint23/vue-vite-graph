@@ -27,25 +27,25 @@ const controls = new OrbitControls(camera, renderer.domElement);
     color: 0xffffff
 });
 
-const spherGeometry = new THREE.SphereGeometry(1, 20, 20)
-    // 标准材质
-    const cubeMeterial = new THREE.MeshStandardMaterial()
 
-    // 根据几何体和材质创建物体
-    const sphere = new THREE.Mesh(spherGeometry, cubeMeterial)
-    sphere.castShadow = true
-    scene.add(sphere)
+
+ 
+
 
   const planeGeometry = new THREE.PlaneGeometry(20, 20);
 const plane = new THREE.Mesh(planeGeometry, material);
-plane.position.set(0, -5, 0);
+plane.position.set(0, -10, 0);
 plane.rotation.x = -Math.PI / 2;
 // 接收阴影
 plane.receiveShadow = true;
 plane.castShadow = true;
 scene.add(plane)
 
-
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
+const sphereMaterial = new THREE.MeshStandardMaterial();
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.castShadow = true;
+scene.add(sphere);
 
 // // 环境光
 const light = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
@@ -64,10 +64,6 @@ directionalLight.shadow.mapSize.set(4096,4096)
 // 设置平行光投射相机的属性
 directionalLight.shadow.camera.near = 0.5
 directionalLight.shadow.camera.far = 500
-// directionalLight.shadow.camera.top = 5
-// directionalLight.shadow.camera.bottom = -5
-// directionalLight.shadow.camera.left = -5
-// directionalLight.shadow.camera.right = -5
 
 scene.add(directionalLight);
 
@@ -104,7 +100,7 @@ const floorBody = new CANNON.Body();
 floorBody.mass = 0;
 floorBody.addShape(floorShape);
 // 地面位置
-floorBody.position.set(0, -5, 0);
+floorBody.position.set(0, -10, 0);
 // 旋转地面的位置
 floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
 world.addBody(floorBody);
@@ -112,10 +108,64 @@ world.addBody(floorBody);
 
 const clock = new THREE.Clock()
 
+const cubeArr = [];
+//设置物体材质
+const cubeWorldMaterial = new CANNON.Material("cube");
+
+function createCube() {
+  // 创建立方体和平面
+  const cubeGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+  const cubeMaterial = new THREE.MeshStandardMaterial();
+  const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+  cube.castShadow = true;
+  scene.add(cube);
+  // 创建物理cube形状
+  const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
+
+  // 创建物理世界的物体
+  const cubeBody = new CANNON.Body({
+    shape: cubeShape,
+    position: new CANNON.Vec3(0, 0, 0),
+    //   小球质量
+    mass: 1,
+    //   物体材质
+    material: cubeWorldMaterial,
+  });
+  cubeBody.applyLocalForce(
+    new CANNON.Vec3(100, 0, 0), //添加的力的大小和方向
+    new CANNON.Vec3(0, 0, 0) //施加的力所在的位置
+  );
+
+  // 将物体添加至物理世界
+  world.addBody(cubeBody);
+  // 添加监听碰撞事件
+  // function HitEvent(e) {
+  //   // 获取碰撞的强度
+  //     console.log("hit", e);
+  //   const impactStrength = e.contact.getImpactVelocityAlongNormal();
+  //   console.log(impactStrength);
+   
+  // }
+  // cubeBody.addEventListener("collide", HitEvent);
+  cubeArr.push({
+    mesh: cube,
+    body: cubeBody,
+  });
+}
+
+setInterval(() => {
+    createCube()
+}, 1000);
+
   const render = () => {
       let deltaTime = clock.getDelta();         
       world.step(1 / 120, deltaTime)
-      sphere.position.copy(sphereBody.position)
+      // sphere.position.copy(sphereBody.position)
+      cubeArr.forEach((item) => {
+    item.mesh.position.copy(item.body.position);
+    // 设置渲染的物体跟随物理的物体旋转
+    item.mesh.quaternion.copy(item.body.quaternion);
+  });
       renderer.render(scene, camera);
     controls.update()
   requestAnimationFrame(render);
