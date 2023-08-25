@@ -9,8 +9,9 @@ export const meshLine = (geometry: any) => {
 
 export const modifyCityMaterial = (mesh: any) => {
     mesh.material.onBeforeCompile = (shader: any) => {
-        console.log(shader.vertexShader);
+        // console.log(shader.vertexShader);
         console.log(shader.fragmentShader);
+        // //#end#相当于占位符
         shader.fragmentShader = shader.fragmentShader.replace(
           "#include <dithering_fragment>",
           `
@@ -27,6 +28,7 @@ export const modifyCityMaterial = (mesh: any) => {
 
 export function addGradColor(shader: any, mesh: any) {
     mesh.geometry.computeBoundingBox();
+    console.log(mesh)
     //   console.log(mesh.geometry.boundingBox);
   
     let { min, max } = mesh.geometry.boundingBox;
@@ -170,7 +172,7 @@ export function addSpread(shader: any, center = new THREE.Vector2(0, 0)) {
     //   扩散的时间
     shader.uniforms.uToTopTime = { value: 0 };
     //   设置条带的宽度
-    shader.uniforms.uToTopWidth = { value: 40 };
+    shader.uniforms.uToTopWidth = { value: 10 };
   
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <common>",
