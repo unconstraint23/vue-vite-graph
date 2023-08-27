@@ -39,5 +39,12 @@ export default class FlyLine {
           
               // 4/创建飞线物体
               this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+              gsap.to(this.texture.offset, {
+                x: -1,
+                duration: 5,
+                repeat: -1,
+                ease: "none",
+              });
     }
 }
