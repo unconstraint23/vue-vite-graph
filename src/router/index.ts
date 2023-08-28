@@ -162,6 +162,12 @@ const routes = [
          component: () => import("../views/SmartCity.vue"),
         
     },
+    {
+        path: '/garden',
+      
+         component: () => import("../views/SmartGarden.vue"),
+        
+    },
     { path: '/', redirect: '/pixi' }
 
 ]
