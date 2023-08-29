@@ -12,16 +12,17 @@ import { onMounted, ref } from 'vue';
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-
+import Garden from '../garden/garden'
     const containerRef = ref<any>(null)
         const axesHelper = new THREE.AxesHelper(5);
-        const gltfLoader = new GLTFLoader();
-        const dracoLoader = new DRACOLoader();
-      
+       
+     
+    
+      let garden: any
     onMounted(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 50000 );
-    camera.position.set(5, 10, 15)
+    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 100000);
+    camera.position.set(1000, 1000, 1000)
     const light = new THREE.AmbientLight(0xffffff, 1); // soft white light
     scene.add(light);
     scene.add(axesHelper)
@@ -50,18 +51,18 @@ renderer.outputEncoding = THREE.sRGBEncoding
   // 设置控制器阻尼
   controls.enableDamping = true;
   renderer.setClearColor("#000");
-  gltfLoader.setDRACOLoader(dracoLoader)
-  dracoLoader.setDecoderPath("./src/public/draco/gltf/");
+
   const createMesh = () => {
-    gltfLoader.load("/src/model/city4.glb", (gltf: any) => {
-        console.log(gltf);
-      scene.add(gltf.scene);
-    })
+    garden = new Garden(scene)
   }
   
   createMesh()
+  const clock = new THREE.Clock();
   const render = () => {
- 
+    const time = clock.getDelta();
+    
+       garden.update(time)
+   
     renderer.render(scene, camera);
     controls.update()
   requestAnimationFrame(render);
@@ -74,6 +75,7 @@ camera.updateProjectionMatrix()
 render()
 containerRef.value.appendChild(renderer.domElement)
 })
+
 
 </script>
 
