@@ -14,6 +14,7 @@
     "cannon-es": "^0.20.0",
     "dat.gui": "^0.7.9",
     "gsap": "^3.11.4",
+    "mitt": "^3.0.1",
     "normalize.css": "^8.0.1",
     "path": "^0.12.7",
     "pixi-filters": "^5.1.1",

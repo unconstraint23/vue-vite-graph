@@ -8,11 +8,11 @@
           <h3>
             <span>热气球控制</span>
           </h3>
-          <h1 @click="toggleAction(0)">
+          <h1 @click="toggleAction(0)" class="activeBtn">
             <img class="icon" src="../assets/bg/bar.svg" alt="" />
             <span>设置热气球以横穿园区的动画显示</span>
           </h1>
-          <h1 @click="toggleAction(1)">
+          <h1 @click="toggleAction(1)" class="activeBtn">
             <img class="icon" src="../assets/bg/bar.svg" alt="" />
             <span>设置热气球以环绕园区进行运动</span>
           </h1>
@@ -24,15 +24,15 @@
           <h3>
             <span>相机控制</span>
           </h3>
-          <h1 @click="toggleCamera('default')">
+          <h1 @click="toggleCamera('default')" class="activeBtn">
             <img class="icon" src="../assets/bg/bar.svg" alt="" />
             <span>默认的相机视角</span>
           </h1>
-          <h1 @click="toggleCamera('carcamera_Orientation')">
+          <h1 @click="toggleCamera('carcamera_Orientation')" class="activeBtn">
             <img class="icon" src="../assets/bg/bar.svg" alt="" />
             <span>设置相机追随汽车导览园区</span>
           </h1>
-          <h1 @click="toggleCamera('rightcamera_Orientation')">
+          <h1 @click="toggleCamera('rightcamera_Orientation')" class="activeBtn">
             <img class="icon" src="../assets/bg/bar.svg" alt="" />
             <span>查看汽车司机视角</span>
           </h1>
@@ -92,25 +92,62 @@ import { onMounted, ref } from 'vue';
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from 'three/addons/controls/OrbitControls';
-import Garden from '../garden/garden'
-    const containerRef = ref<any>(null)
-        const axesHelper = new THREE.AxesHelper(5);
-       
-     const toggleAction = (index: number) => {
 
+import { FlyControls } from "three/examples/jsm/controls/FlyControls";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
+import Garden from '../garden/garden'
+import eventHub from "@/utils/eventHub";
+    const containerRef = ref<any>(null)
+    const currentCamera = ref<any>()
+    const currentControl = ref<any>()
+        const axesHelper = new THREE.AxesHelper(5);
+        const clock = new THREE.Clock();
+        const scene = new THREE.Scene();
+        const renderer = new THREE.WebGLRenderer({antialias: true,logarithmicDepthBuffer: true});
+     const toggleAction = (index: number) => {
+      eventHub.emit("actionClick", index);
      }
     const toggleCamera = (key: string) => {
-
+      
+      currentCamera.value = garden.cameraModule[key]
+      
+      
     }
 
     const toggleControls = (key: string) => {
+      let controls: any
       
+      if(key === "Orbit") {
+         controls = new OrbitControls(currentCamera.value, renderer.domElement);
+          // 设置控制器阻尼
+          controls.enableDamping = true;
+          // controls.maxPolarAngle = Math.PI / 2;
+          // controls.minPolarAngle = 0;
+      } else if(key === "Fly") {
+       controls = new FlyControls(
+        currentCamera.value,
+        renderer.domElement
+      );
+      controls.movementSpeed = 100;
+      controls.rollSpeed = Math.PI / 30;
+    
+      } else {
+        controls = new FirstPersonControls(
+          currentCamera.value,
+          renderer.domElement
+      );
+      controls.movementSpeed = 100;
+    
+      controls.lookSpeed = 0.5;
+      }
+      currentControl.value = controls
     }
       let garden: any
     onMounted(() => {
-    const scene = new THREE.Scene();
+    
     const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 100000);
     camera.position.set(1000, 1000, 1000)
+    currentCamera.value = camera
     const light = new THREE.AmbientLight(0xffffff, 1); // soft white light
     scene.add(light);
     scene.add(axesHelper)
@@ -131,28 +168,29 @@ import Garden from '../garden/garden'
     // 更新摄像头投影矩阵
     camera.updateProjectionMatrix();
  // 初始化渲染器 抗锯齿
- const renderer = new THREE.WebGLRenderer({antialias: true,logarithmicDepthBuffer: true});
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding
      // 添加控制器
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(currentCamera.value, renderer.domElement);
   // 设置控制器阻尼
   controls.enableDamping = true;
+  currentControl.value = controls
   renderer.setClearColor("#000");
 
   const createMesh = () => {
-    garden = new Garden(scene)
+    garden = new Garden(scene,camera)
   }
   
   createMesh()
-  const clock = new THREE.Clock();
+
   const render = () => {
     const time = clock.getDelta();
     
        garden.update(time)
    
-    renderer.render(scene, camera);
-    controls.update()
+    renderer.render(scene, currentCamera.value);
+    currentControl.value.update(time)
   requestAnimationFrame(render);
   }
 window.addEventListener("resize", () => {
@@ -180,7 +218,10 @@ containerRef.value.appendChild(renderer.domElement)
   display: flex;
   flex-direction: column;
 }
-
+.activeBtn {
+  color: #bfe;
+  cursor: pointer;
+}
 .header {
   /* width: 1920px;
         height: 100px; */

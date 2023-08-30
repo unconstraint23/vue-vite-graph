@@ -14,7 +14,11 @@
     "noEmit": true,
     "types": [
       "vite-plugin-glsl/ext"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
